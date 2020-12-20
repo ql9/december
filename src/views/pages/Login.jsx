@@ -33,9 +33,7 @@ const Login = ({ history }) => {
   };
   const informParent = (response) => {
     authenticate(response, () => {
-      isAuth() && isAuth().role === "admin"
-        ? history.push("/admin")
-        : history.push("/private");
+        history.push("/home");
     });
   };
 
@@ -80,9 +78,7 @@ const Login = ({ history }) => {
               password1: "",
               textChange: "Submitted",
             });
-            isAuth() && isAuth().role === "admin"
-              ? history.push("/admin")
-              : history.push("/private");
+            history.push("/home");
             toast.success(`Hey ${res.data.user.name}, Welcome back!`);
           });
         })
@@ -93,8 +89,8 @@ const Login = ({ history }) => {
             password1: "",
             textChange: "Sign In",
           });
-          console.log(err.response);
-          toast.error(err.response.data.errors);
+          console.log(err.response)
+          // toast.error(err.response.data.message);
         });
     } else {
       toast.error("Please fill all fields");

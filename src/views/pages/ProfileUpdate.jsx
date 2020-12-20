@@ -4,13 +4,12 @@ import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import { updateUser, isAuth, getCookie, signout } from "../../controllers/auth";
 
-const Private = ({ history }) => {
+const Profile = ({ history }) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password1: "",
     textChange: "Update",
-    role: "",
   });
 
   useEffect(() => {
@@ -27,8 +26,9 @@ const Private = ({ history }) => {
         },
       })
       .then((res) => {
-        const { role, name, email } = res.data;
-        setFormData({ ...formData, role, name, email });
+        console.log(res.data);
+        const {name, email } = res.data.user;
+        setFormData({ ...formData, name, email });
       })
       .catch((err) => {
         toast.error(`Error To Your Information ${err.response.statusText}`);
@@ -40,7 +40,7 @@ const Private = ({ history }) => {
       });
   };
 
-  const { name, email, password1, textChange, role } = formData;
+  const { name, email, password1, textChange } = formData;
 
   const handleChange = (text) => (e) => {
     setFormData({ ...formData, [text]: e.target.value });
@@ -53,15 +53,14 @@ const Private = ({ history }) => {
     setFormData({ ...formData, textChange: "Submitting" });
     axios
       .put(
-        `${process.env.REACT_APP_API_URL}/user/update`,
+        `${process.env.REACT_APP_API_URL}/users/${isAuth()._id}`,
         {
           name,
-          email,
           password: password1,
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: token,
           },
         }
       )
@@ -90,14 +89,7 @@ const Private = ({ history }) => {
               className="w-full flex-1 mt-8 text-indigo-500"
               onSubmit={handleSubmit}
             >
-              <div className="mx-auto max-w-xs relative ">
-                <input
-                  disabled
-                  className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-                  type="text"
-                  placeholder="Role"
-                  value={role}
-                />
+              <div className="mx-auto max-w-xs relative ">          
                 <input
                   className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
                   type="email"
@@ -159,4 +151,4 @@ const Private = ({ history }) => {
   );
 };
 
-export default Private;
+export default Profile;
