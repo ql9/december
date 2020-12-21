@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import authSvg from "../assests/login.svg";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
-import { authenticate, isAuth } from "../../controllers/auth";
+import { authenticate, isAuth } from "../../controllers/localStorage";
 import { Link, Redirect } from "react-router-dom";
 import { GoogleLogin } from "react-google-login";
 import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
@@ -33,7 +33,7 @@ const Login = ({ history }) => {
   };
   const informParent = (response) => {
     authenticate(response, () => {
-        history.push("/home");
+      history.push("/home");
     });
   };
 
@@ -89,7 +89,7 @@ const Login = ({ history }) => {
             password1: "",
             textChange: "Sign In",
           });
-          console.log(err.response)
+          console.log(err.response);
           // toast.error(err.response.data.message);
         });
     } else {

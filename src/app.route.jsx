@@ -1,6 +1,6 @@
-import React from 'react';
-import { Route, Redirect } from 'react-router-dom';
-import { isAuth } from './controllers/auth';
+import React from "react";
+import { Route, Redirect } from "react-router-dom";
+import { isAuth } from "./controllers/localStorage";
 
 const RedirectRoute = ({ component: Component, ...rest }) => (
   <Route
@@ -11,7 +11,7 @@ const RedirectRoute = ({ component: Component, ...rest }) => (
       ) : (
         <Redirect
           to={{
-            pathname: '/login',
+            pathname: "/login",
             state: { from: props.location },
           }}
         />

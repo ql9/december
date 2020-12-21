@@ -3,10 +3,10 @@ import authSvg from "../assests/welcome.svg";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import jwt from "jsonwebtoken";
-import { isAuth } from "../../controllers/auth";
-import { Redirect} from "react-router-dom";
+import { isAuth } from "../../controllers/localStorage";
+import { Redirect } from "react-router-dom";
 
-const Activate = ({ match , history}) => {
+const Activate = ({ match, history }) => {
   const [formData, setFormData] = useState({
     name: "",
     token: "",
@@ -38,7 +38,7 @@ const Activate = ({ match , history}) => {
           show: false,
         });
         toast.success(res.data.message);
-        history.push('/login');
+        history.push("/login");
       })
       .catch((err) => {
         toast.error(err.response.data.errors);

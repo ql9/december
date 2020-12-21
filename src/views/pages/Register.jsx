@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import authSvg from "../assests/auth.svg";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
-import { isAuth } from "../../controllers/auth";
+import { isAuth } from "../../controllers/localStorage";
 import { Redirect } from "react-router-dom";
 
 const Register = () => {

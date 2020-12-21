@@ -2,7 +2,12 @@ import React, { useState, useEffect } from "react";
 import authSvg from "../assests/update.svg";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
-import { updateUser, isAuth, getCookie, signout } from "../../controllers/auth";
+import {
+  updateUser,
+  isAuth,
+  getCookie,
+  signout,
+} from "../../controllers/localStorage";
 
 const Profile = ({ history }) => {
   const [formData, setFormData] = useState({
@@ -27,7 +32,7 @@ const Profile = ({ history }) => {
       })
       .then((res) => {
         console.log(res.data);
-        const {name, email } = res.data.user;
+        const { name, email } = res.data.user;
         setFormData({ ...formData, name, email });
       })
       .catch((err) => {
@@ -89,7 +94,7 @@ const Profile = ({ history }) => {
               className="w-full flex-1 mt-8 text-indigo-500"
               onSubmit={handleSubmit}
             >
-              <div className="mx-auto max-w-xs relative ">          
+              <div className="mx-auto max-w-xs relative ">
                 <input
                   className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
                   type="email"
