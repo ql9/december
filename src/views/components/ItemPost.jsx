@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Avatar, Text, Button, Image } from '@fluentui/react-northstar';
+import { Avatar, Text, Button, } from '@fluentui/react-northstar';
 
 const ItemPost = ({ avatar, name, content, image }) => {
+  const [isLike, setIsLike] = useState(false);
   return (
     <div
       style={{
@@ -44,9 +45,14 @@ const ItemPost = ({ avatar, name, content, image }) => {
       >
         <Text
           content={content}
-          style={{ flex: 2, display:'flex' ,marginTop: 10, marginLeft: 16, marginRight: 16 }}
+          style={{
+            flex: 2,
+            display: 'flex',
+            marginTop: 10,
+            marginLeft: 16,
+            marginRight: 16,
+          }}
         />
-        {/* <Image src="https://longkhanhpets.com/wp-content/uploads/2019/08/tam-ly-loai-meo-1.jpg" style={{flex: 2, display:'flex'}} /> */}
       </div>
       <div
         style={{
@@ -60,7 +66,12 @@ const ItemPost = ({ avatar, name, content, image }) => {
           paddingRight: 16,
         }}
       >
-        <Button icon={<i class="far fa-heart fa-2x"></i>} text iconOnly />
+        {isLike ? (
+          <Button icon={<i class="fas fa-heart fa-2x"></i>} text iconOnly  onClick={() => setIsLike(false)}/>
+        ) : (
+          <Button icon={<i class="far fa-heart fa-2x"></i>} text iconOnly  onClick={() => setIsLike(true)} />
+        )}
+
         <Button
           icon={<i class="far fa-comment fa-2x" style={{ marginLeft: 20 }}></i>}
           text

@@ -2,12 +2,18 @@ import React, { useState } from 'react';
 import { isAuth, getCookie } from '../../controllers/localStorage';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { TextArea, Button } from '@fluentui/react-northstar';
+import { TextArea, Button, Image } from '@fluentui/react-northstar';
 
 const Post = ({ history }) => {
   const [content, setContent] = useState('');
-  const [image, setImage] = useState('toan');
+  const [image, setImage] = useState(null);
   const [notify, setNotify] = useState('Post');
+  const [imagePreview, setImagePreview] = useState(null);
+
+  const handleChangeImage = (image) => {
+    setImagePreview(URL.createObjectURL(image.target.files[0]));
+    setImage(image.target.files[0]);
+  };
 
   const getPosts = () => {
     const token = getCookie('token');
@@ -28,59 +34,28 @@ const Post = ({ history }) => {
   const handleSubmit = () => {
     const token = getCookie('token');
     setNotify('Submitting');
+    const data = new FormData();
+    data.append('file', image);
+    data.append('content', content);
+    data.append('userId', `${isAuth()._id}`);
     axios
-      .post(
-        `${process.env.REACT_APP_API_URL}/post`,
-        {
-          userId: `${isAuth()._id}`,
-          content: content,
-          image: image,
+      .post(`${process.env.REACT_APP_API_URL}/post`, data, {
+        headers: {
+          Authorization: token,
         },
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      )
+      })
       .then((res) => {
         toast.success('Posted Successfully');
         setNotify('Post');
+        setContent('');
+        setImage(null);
+        setImagePreview(null);
       })
       .catch((err) => {
         console.log(err.response);
       });
   };
   return (
-    // <div>
-    //   <form
-    //     className="w-full flex-1 mt-8 text-indigo-500"
-    //     onSubmit={handleSubmit}
-    //   >
-    //     <div className="mx-auto max-w-xs relative ">
-    //       <textarea
-    //         className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
-    //         placeholder="Type here ..."
-    //         onChange={handleChange("content")}
-    //         value={content}
-    //       ></textarea>
-
-    //       <input
-    //         className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
-    //         type="text"
-    //         placeholder="Image"
-    //         onChange={handleChange("image")}
-    //         value={image}
-    //       />
-    //       <button
-    //         type="submit"
-    //         className="mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
-    //       >
-    //         {/* <i className="fas fa-user-plus fa 1x w-6  -ml-2" /> */}
-    //         <span className="ml-3">{textChange}</span>
-    //       </button>
-    //     </div>
-    //   </form>
-    // </div>
     <div
       style={{
         flex: 1,
@@ -108,12 +83,36 @@ const Post = ({ history }) => {
         }}
         onChange={(text) => setContent(text.target.value)}
       />
+      {imagePreview ? (
+        <div style={{ height: 100, width: 100, display: 'flex', marginTop: 5 }}>
+          <Image
+            src={imagePreview}
+            style={{ height: 100, width: 100, display: 'flex', marginTop: 5 }}
+          />
+          <Button
+            icon={<i class="fas fa-times fa-1x"></i>}
+            text
+            iconOnly
+            style={{
+              width: 10,
+              height: 10,
+              position: 'relative',
+              top: 15,
+              right: 30,
+            }}
+            onClick={() => {
+              setImage(null);
+              setImagePreview(null);
+            }}
+          />
+        </div>
+      ) : null}
       <div style={{ flex: 3, display: 'flex', marginBottom: 10 }}>
         <div style={{ flex: 1, display: 'flex' }}>
-          <Button
-            content="Image"
+          <input
+            type="file"
             style={{ alignSelf: 'center' }}
-            onClick={() => getPosts()}
+            onChange={handleChangeImage}
           />
         </div>
         <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>

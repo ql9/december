@@ -1,29 +1,30 @@
-import React, { useState, useEffect } from "react";
-import authSvg from "../assests/update.svg";
-import { ToastContainer, toast } from "react-toastify";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import authSvg from '../assests/update.svg';
+import { ToastContainer, toast } from 'react-toastify';
+import axios from 'axios';
 import {
   updateUser,
   isAuth,
   getCookie,
   signout,
-} from "../../controllers/localStorage";
+} from '../../controllers/localStorage';
+import { Avatar, Button, Image } from '@fluentui/react-northstar';
 
 const Profile = ({ history }) => {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password1: "",
-    textChange: "Update",
+    name: '',
+    email: '',
+    password1: '',
+    textChange: 'Update',
   });
-
+  const [avatar, setAvatar] = useState(null);
   useEffect(() => {
     loadProfile();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadProfile = () => {
-    const token = getCookie("token");
+    const token = getCookie('token');
     axios
       .get(`${process.env.REACT_APP_API_URL}/users/${isAuth()._id}`, {
         headers: {
@@ -33,13 +34,14 @@ const Profile = ({ history }) => {
       .then((res) => {
         console.log(res.data);
         const { name, email } = res.data.user;
+        setAvatar(res.data.user.avatar);
         setFormData({ ...formData, name, email });
       })
       .catch((err) => {
         toast.error(`Error To Your Information ${err.response.statusText}`);
         if (err.response.status === 401) {
           signout(() => {
-            history.push("/login");
+            history.push('/login');
           });
         }
       });
@@ -52,10 +54,10 @@ const Profile = ({ history }) => {
   };
 
   const handleSubmit = (e) => {
-    const token = getCookie("token");
+    const token = getCookie('token');
     console.log(token);
     e.preventDefault();
-    setFormData({ ...formData, textChange: "Submitting" });
+    setFormData({ ...formData, textChange: 'Submitting' });
     axios
       .put(
         `${process.env.REACT_APP_API_URL}/users/${isAuth()._id}`,
@@ -71,8 +73,8 @@ const Profile = ({ history }) => {
       )
       .then((res) => {
         updateUser(res, () => {
-          toast.success("Profile Updated Successfully");
-          setFormData({ ...formData, textChange: "Update" });
+          toast.success('Profile Updated Successfully');
+          setFormData({ ...formData, textChange: 'Update' });
         });
       })
       .catch((err) => {
@@ -89,7 +91,7 @@ const Profile = ({ history }) => {
             <h1 className="text-2xl xl:text-3xl font-extrabold">
               Profile Update
             </h1>
-
+            <Avatar image={avatar} style={{ width: 100, height: 100 }} />
             <form
               className="w-full flex-1 mt-8 text-indigo-500"
               onSubmit={handleSubmit}
@@ -106,7 +108,7 @@ const Profile = ({ history }) => {
                   className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
                   type="text"
                   placeholder="Name"
-                  onChange={handleChange("name")}
+                  onChange={handleChange('name')}
                   value={name}
                 />
 
@@ -114,7 +116,7 @@ const Profile = ({ history }) => {
                   className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
                   type="password"
                   placeholder="Password"
-                  onChange={handleChange("password1")}
+                  onChange={handleChange('password1')}
                   value={password1}
                 />
                 <button
