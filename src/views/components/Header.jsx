@@ -5,9 +5,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 
 const Header = ({ history }) => {
-  const [avatarUrl, setAvatar] = useState({
-    avatar: "",
-  });
+  const [avatarUrl, setAvatar] = useState(null);
 
   useEffect(() => {
     getAvatar();
@@ -23,8 +21,7 @@ const Header = ({ history }) => {
         },
       })
       .then((res) => {
-        const { avatar } = res.data.user;
-        setAvatar({ ...avatarUrl, avatar });
+        setAvatar(res.data.user.avatar);
       })
       .catch((err) => {
         toast.error(`Error To Your Information ${err.response.statusText}`);
@@ -57,7 +54,7 @@ const Header = ({ history }) => {
           history.push("/profile");
         }}
       >
-        <Avatar image={avatarUrl} />
+      <Avatar image={avatarUrl} />
       </button>
       <button
         style={{ flex: 0.5, marginRight: 16 }}

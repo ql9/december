@@ -41,7 +41,7 @@ ReactDOM.render(
         <RedirectRoute path="/" exact component={Home}/>
         <Redirect to="/" />
       </Switch>
-    </BrowserRouter>,
+    </BrowserRouter>
   </Provider>,
   document.getElementById("root")
 );

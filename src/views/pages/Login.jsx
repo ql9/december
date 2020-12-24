@@ -89,8 +89,8 @@ const Login = ({ history }) => {
             password1: "",
             textChange: "Sign In",
           });
-          console.log(err.response);
-          // toast.error(err.response.data.message);
+          // console.log(err.response);
+          toast.error(err.response.data.message);
         });
     } else {
       toast.error("Please fill all fields");
