@@ -6,11 +6,18 @@ import { toast } from "react-toastify";
 const Post = ({ history }) => {
   const [formData, setFormData] = useState({
     conntent: "",
-    image: "",
     textChange: "Post",
   });
+  const [imagePreview, setImagePreview] = useState(null);
+  const [image, setImage] = useState(null);
 
-  const { content, image, textChange } = formData;
+  const handleChangeImage = (image) => {
+    console.log(image.target.files[0]);
+    setImagePreview(URL.createObjectURL(image.target.files[0]));
+    setImage(image.target.files[0]);
+  };
+
+  const { content, textChange } = formData;
 
   const handleChange = (text) => (e) => {
     setFormData({ ...formData, [text]: e.target.value });
@@ -21,20 +28,18 @@ const Post = ({ history }) => {
     console.log(token);
     e.preventDefault();
     setFormData({ ...formData, textChange: "Submitting" });
+    const data = new FormData();
+    data.append("file", image);
+    data.append("content", content);
+    data.append("userId", `${isAuth()._id}`);
+
+    console.log(data);
     axios
-      .post(
-        `${process.env.REACT_APP_API_URL}/post`,
-        {
-          userId: `${isAuth()._id}`,
-          content: content,
-          image: image,
+      .post(`${process.env.REACT_APP_API_URL}/post`, data, {
+        headers: {
+          Authorization: token,
         },
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      )
+      })
       .then((res) => {
         toast.success("Posted Successfully");
         setFormData({ ...formData, textChange: "Post" });
@@ -56,13 +61,12 @@ const Post = ({ history }) => {
             onChange={handleChange("content")}
             value={content}
           ></textarea>
-
+          {/* eslint-disable-next-line */}
+          <img src={imagePreview} />
           <input
             className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
-            type="text"
-            placeholder="Image"
-            onChange={handleChange("image")}
-            value={image}
+            type="file"
+            onChange={handleChangeImage}
           />
           <button
             type="submit"
