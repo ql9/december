@@ -31,6 +31,8 @@ const Header = ({ history }) => {
       });
   };
 
+  const { avatar } = avatarUrl;
+
   return (
     <div
       style={{
@@ -57,7 +59,7 @@ const Header = ({ history }) => {
           history.push("/profile");
         }}
       >
-        <Avatar image={avatarUrl} />
+        <Avatar image={avatar} />
       </button>
       <button
         style={{ flex: 0.5, marginRight: 16 }}
