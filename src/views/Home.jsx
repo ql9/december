@@ -2,7 +2,7 @@ import React from "react";
 import { ToastContainer } from "react-toastify";
 
 import Header from "./components/Header.jsx";
-import List from "./components/UserManagement.jsx";
+import List from "./components/List.jsx";
 
 function Home({ history }) {
   return (
