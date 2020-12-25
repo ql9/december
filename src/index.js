@@ -37,7 +37,7 @@ ReactDOM.render(
           exact
           render={(props) => <Activate {...props} />}
         />
-        <RedirectRoute path="/profile" exact component={Profile} />
+        <RedirectRoute path="/profile/:userId" exact component={Profile} />
         <RedirectRoute path="/" exact component={Home}/>
         <Redirect to="/" />
       </Switch>
