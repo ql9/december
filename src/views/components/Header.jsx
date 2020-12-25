@@ -27,7 +27,7 @@ const Header = ({ history }) => {
         setAvatar({ ...avatarUrl, avatar });
       })
       .catch((err) => {
-        toast.error(`Error To Your Information ${err.response.statusText}`);
+        toast.error(`abc ${err.response.statusText}`);
       });
   };
 

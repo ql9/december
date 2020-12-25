@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import authSvg from "../assests/update.svg";
 import { ToastContainer, toast } from "react-toastify";
+import { useLocation } from "react-router-dom";
 import axios from "axios";
 import {
   updateUser,
@@ -10,6 +11,8 @@ import {
 } from "../../controllers/localStorage";
 
 const Profile = ({ history }) => {
+  const location = useLocation();
+  console.log(location.state.userId);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -18,14 +21,14 @@ const Profile = ({ history }) => {
   });
 
   useEffect(() => {
-    loadProfile();
+    loadProfile(location.state.userId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const loadProfile = () => {
+  const loadProfile = (userId) => {
     const token = getCookie("token");
     axios
-      .get(`${process.env.REACT_APP_API_URL}/users/${isAuth()._id}`, {
+      .get(`${process.env.REACT_APP_API_URL}/users/${userId}`, {
         headers: {
           Authorization: token,
         },
@@ -53,12 +56,12 @@ const Profile = ({ history }) => {
 
   const handleSubmit = (e) => {
     const token = getCookie("token");
-    console.log(token);
+    console.log(location.state.userId);
     e.preventDefault();
     setFormData({ ...formData, textChange: "Submitting" });
     axios
       .put(
-        `${process.env.REACT_APP_API_URL}/users/${isAuth()._id}`,
+        `${process.env.REACT_APP_API_URL}/users/${location.state.userId}`,
         {
           name,
           password: password1,
