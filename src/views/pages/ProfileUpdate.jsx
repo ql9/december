@@ -3,12 +3,7 @@ import authSvg from "../assests/update.svg";
 import { ToastContainer, toast } from "react-toastify";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
-import {
-  updateUser,
-  isAuth,
-  getCookie,
-  signout,
-} from "../../controllers/localStorage";
+import { getCookie, signout } from "../../controllers/localStorage";
 
 const Profile = ({ history }) => {
   const location = useLocation();
@@ -73,10 +68,11 @@ const Profile = ({ history }) => {
         }
       )
       .then((res) => {
-        updateUser(res, () => {
-          toast.success("Profile Updated Successfully");
-          setFormData({ ...formData, textChange: "Update" });
-        });
+        toast.success("Profile Updated Successfully");
+        // updateUser(res, () => {
+        //   toast.success("Profile Updated Successfully");
+        //   setFormData({ ...formData, textChange: "Update" });
+        // });
       })
       .catch((err) => {
         console.log(err.response);

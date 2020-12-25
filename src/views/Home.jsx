@@ -2,7 +2,6 @@ import React from "react";
 import { ToastContainer } from "react-toastify";
 
 import Header from "./components/Header.jsx";
-import Post from "./components/Post.jsx";
 import List from "./components/UserManagement.jsx";
 
 function Home({ history }) {
