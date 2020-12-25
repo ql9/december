@@ -83,7 +83,6 @@ const Profile = ({ history }) => {
         console.log(err.response);
       });
   };
-  console.log(avatarPreview);
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
       <ToastContainer />

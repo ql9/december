@@ -3,7 +3,16 @@ import { Avatar, Text, Button, Image } from '@fluentui/react-northstar';
 import { isAuth, getCookie } from '../../controllers/localStorage';
 import axios from 'axios';
 
-const ItemPost = ({ likeBy, avatar, name, content, image, postId, history }) => {
+const ItemPost = ({
+  likeBy,
+  avatar,
+  name,
+  content,
+  image,
+  postId,
+  userId,
+  history,
+}) => {
   const [isLike, setIsLike] = useState(false);
   const [number, setNumber] = useState(likeBy.length);
 
@@ -95,6 +104,11 @@ const ItemPost = ({ likeBy, avatar, name, content, image, postId, history }) => 
       >
         <Avatar image={avatar} />
         <Text
+          onClick={() => {
+            history.push(`/posts/u/${userId}`, {
+              userId: userId,
+            });
+          }}
           content={name}
           style={{ marginLeft: 10, fontSize: 16, fontWeight: 'bold' }}
         />
@@ -160,14 +174,14 @@ const ItemPost = ({ likeBy, avatar, name, content, image, postId, history }) => 
           text
           iconOnly
           onClick={() => {
-            history.push(`/posts/${postId}`,{
-                avatar: avatar,
-                name: name,
-                content: content,
-                image: image,
-                likeBy: likeBy,
-                postId: postId
-            })
+            history.push(`/posts/${postId}`, {
+              avatar: avatar,
+              name: name,
+              content: content,
+              image: image,
+              likeBy: likeBy,
+              postId: postId,
+            });
           }}
         />
         <text style={{ marginLeft: 20, fontWeight: 'bold' }}>
