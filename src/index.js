@@ -8,6 +8,7 @@ import Activate from "./views/pages/Activate.jsx";
 import Profile from "./views/pages/ProfileUpdate.jsx";
 import ForgetPassword from "./views/pages/ForgetPassword.jsx";
 import ResetPassword from "./views/pages/ResetPassword.jsx";
+import PostDetail from "./views/pages/PostDetail.jsx";
 import { Provider, teamsTheme } from '@fluentui/react-northstar'
 import RedirectRoute from "./app.route";
 import "react-toastify/dist/ReactToastify.css";
@@ -38,7 +39,8 @@ ReactDOM.render(
           render={(props) => <Activate {...props} />}
         />
         <RedirectRoute path="/profile" exact component={Profile} />
-        <RedirectRoute path="/" exact component={Home}/>
+        <RedirectRoute path="/posts/:postId" exact component={PostDetail} />
+        <RedirectRoute path="/" exact component={Home} />
         <Redirect to="/" />
       </Switch>
     </BrowserRouter>

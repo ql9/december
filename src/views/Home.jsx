@@ -8,6 +8,7 @@ import axios from 'axios';
 
 function Home({ history }) {
   const [data, setData] = useState([]);
+  const [load, setLoad] = useState(false);
   const getPosts = () => {
     const token = getCookie('token');
     axios
@@ -25,11 +26,11 @@ function Home({ history }) {
   };
   useEffect(() => {
     getPosts();
-  }, []);
-  console.log(data);
-  return data.length ? (
+  }, [load]);
+
+  return (
     <div>
-      <Header history={history} />
+      <Header history={history} flag={true}/>
       <div
         style={{
           backgroundColor: '#F8F8F8',
@@ -40,28 +41,27 @@ function Home({ history }) {
         }}
       >
         <ToastContainer />
-        <Post />
-        {/* {data.forEach((element) => (
-          // <ItemPost
-          //   avatar={element.avatar}
-          //   name={element.name}
-          //   content={element.content}
-          // />
-          <text>{element.content}</text>
-        ))} */}
-        <ItemPost
-          avatar={data[0].avatar}
-          name={data[0].name}
-          content={data[0].content}
-        />
-        <ItemPost
-          avatar={data[1].avatar}
-          name={data[1].name}
-          content={data[1].content}
-        />
+        <Post load={load} setLoad={setLoad} />
+        {data.length ? (
+          data.map((item) => {
+            return (
+              <ItemPost
+                postId={item.postId}
+                avatar={item.avatar}
+                name={item.name}
+                content={item.content}
+                image={item.image}
+                likeBy={item.likeBy}
+                history={history}
+              />
+            );
+          })
+        ) : (
+          <div style={{ flex: 20 }}></div>
+        )}
       </div>
     </div>
-  ) : null;
+  );
 }
 
 export default Home;

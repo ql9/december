@@ -1,16 +1,80 @@
-import React, { useState } from 'react';
-import { Avatar, Text, Button, } from '@fluentui/react-northstar';
+import React, { useState, useEffect } from 'react';
+import { Avatar, Text, Button, Image } from '@fluentui/react-northstar';
+import { isAuth, getCookie } from '../../controllers/localStorage';
+import axios from 'axios';
 
-const ItemPost = ({ avatar, name, content, image }) => {
+const ItemPost = ({ likeBy, avatar, name, content, image, postId, history }) => {
   const [isLike, setIsLike] = useState(false);
+  const [number, setNumber] = useState(likeBy.length);
+
+  const checkLiked = () => {
+    const check = likeBy.indexOf(isAuth()._id);
+    return check > -1;
+  };
+
+  useEffect(() => {
+    setIsLike(checkLiked());
+    console.log(checkLiked());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const likePost = () => {
+    const token = getCookie('token');
+    axios
+      .put(
+        `${process.env.REACT_APP_API_URL}/post/like`,
+        {
+          postId: postId,
+          userId: `${isAuth()._id}`,
+        },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+        setIsLike(true);
+        setNumber(number + 1);
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  };
+  const unLikePost = () => {
+    const token = getCookie('token');
+    axios
+      .put(
+        `${process.env.REACT_APP_API_URL}/post/unlike`,
+        {
+          postId: postId,
+          userId: `${isAuth()._id}`,
+        },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+        setIsLike(false);
+        setNumber(number - 1);
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  };
+
   return (
     <div
       style={{
         display: 'flex',
         flexDirection: 'column',
-        height: 500,
+        height: 1000,
         marginTop: 30,
-        width: 1000,
+        width: 800,
         backgroundColor: '#FFFFFF',
         borderRadius: 10,
         borderWidth: 1,
@@ -38,7 +102,7 @@ const ItemPost = ({ avatar, name, content, image }) => {
       <div
         style={{
           width: '100%',
-          flex: 10,
+          flex: 15,
           display: 'flex',
           flexDirection: 'column',
         }}
@@ -46,13 +110,16 @@ const ItemPost = ({ avatar, name, content, image }) => {
         <Text
           content={content}
           style={{
-            flex: 2,
+            flex: 1,
             display: 'flex',
             marginTop: 10,
             marginLeft: 16,
             marginRight: 16,
           }}
         />
+        <div style={{ flex: 5 }}>
+          <Image src={image} style={{ height: 750, width: '100%' }} />
+        </div>
       </div>
       <div
         style={{
@@ -67,16 +134,45 @@ const ItemPost = ({ avatar, name, content, image }) => {
         }}
       >
         {isLike ? (
-          <Button icon={<i class="fas fa-heart fa-2x"></i>} text iconOnly  onClick={() => setIsLike(false)}/>
+          <Button
+            icon={<i class="fas fa-heart fa-2x"></i>}
+            text
+            iconOnly
+            onClick={() => {
+              setIsLike(false);
+              unLikePost();
+            }}
+          />
         ) : (
-          <Button icon={<i class="far fa-heart fa-2x"></i>} text iconOnly  onClick={() => setIsLike(true)} />
+          <Button
+            icon={<i class="far fa-heart fa-2x"></i>}
+            text
+            iconOnly
+            onClick={() => {
+              setIsLike(true);
+              likePost();
+            }}
+          />
         )}
 
         <Button
           icon={<i class="far fa-comment fa-2x" style={{ marginLeft: 20 }}></i>}
           text
           iconOnly
+          onClick={() => {
+            history.push(`/posts/${postId}`,{
+                avatar: avatar,
+                name: name,
+                content: content,
+                image: image,
+                likeBy: likeBy,
+                postId: postId
+            })
+          }}
         />
+        <text style={{ marginLeft: 20, fontWeight: 'bold' }}>
+          {number} likes
+        </text>
       </div>
     </div>
   );

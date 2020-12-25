@@ -4,11 +4,11 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { TextArea, Button, Image } from '@fluentui/react-northstar';
 
-const Post = ({ history }) => {
+const Post = ({ history, load, setLoad }) => {
   const [content, setContent] = useState('');
   const [image, setImage] = useState(null);
-  const [notify, setNotify] = useState('Post');
   const [imagePreview, setImagePreview] = useState(null);
+  const [notify, setNotify] = useState('Post');
 
   const handleChangeImage = (image) => {
     setImagePreview(URL.createObjectURL(image.target.files[0]));
@@ -50,6 +50,7 @@ const Post = ({ history }) => {
         setContent('');
         setImage(null);
         setImagePreview(null);
+        setLoad(!load);
       })
       .catch((err) => {
         console.log(err.response);
@@ -62,7 +63,7 @@ const Post = ({ history }) => {
         display: 'flex',
         flexDirection: 'column',
         marginTop: 30,
-        width: 1000,
+        width: 800,
         height: 300,
         backgroundColor: '#FFFFFF',
         borderRadius: 10,
@@ -72,7 +73,7 @@ const Post = ({ history }) => {
       }}
     >
       <TextArea
-        placeholder="Type content here..."
+        placeholder="Type here..."
         style={{
           marginTop: 20,
           width: '100%',
@@ -82,6 +83,7 @@ const Post = ({ history }) => {
           borderColor: '#C8C8C8',
         }}
         onChange={(text) => setContent(text.target.value)}
+        value={content}
       />
       {imagePreview ? (
         <div style={{ height: 100, width: 100, display: 'flex', marginTop: 5 }}>
@@ -119,7 +121,9 @@ const Post = ({ history }) => {
           <Button
             content={notify}
             style={{ alignSelf: 'center' }}
-            onClick={() => handleSubmit()}
+            onClick={() => {
+              handleSubmit();
+            }}
             disabled={content ? false : true}
           />
         </div>

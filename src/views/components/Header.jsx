@@ -4,7 +4,7 @@ import { signout, getCookie, isAuth } from "../../controllers/localStorage";
 import { toast } from "react-toastify";
 import axios from "axios";
 
-const Header = ({ history }) => {
+const Header = ({ history, flag }) => {
   const [avatarUrl, setAvatar] = useState(null);
 
   useEffect(() => {
@@ -44,7 +44,14 @@ const Header = ({ history }) => {
       <h1 style={{ flex: 10, fontSize: 30 }}>December</h1>
       <button
         style={{ flex: 0.5, marginRight: 16 }}
-        onClick={() => window.location.reload()}
+        onClick={() => {
+          if(flag){
+            window.location.reload();
+          }
+          else{
+            history.goBack();
+          }
+         }}
       >
         <i class="fas fa-home fa-2x"></i>
       </button>

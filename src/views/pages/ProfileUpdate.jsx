@@ -8,7 +8,7 @@ import {
   getCookie,
   signout,
 } from '../../controllers/localStorage';
-import { Avatar, Button, Image } from '@fluentui/react-northstar';
+import { Avatar, Button } from '@fluentui/react-northstar';
 
 const Profile = ({ history }) => {
   const [formData, setFormData] = useState({
@@ -18,10 +18,17 @@ const Profile = ({ history }) => {
     textChange: 'Update',
   });
   const [avatar, setAvatar] = useState(null);
+  const [avatarPreview, setAvatarPreview] = useState(null);
+
   useEffect(() => {
     loadProfile();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleChangeAvatar = (image) => {
+    setAvatarPreview(URL.createObjectURL(image.target.files[0]));
+    setAvatar(image.target.files[0]);
+  };
 
   const loadProfile = () => {
     const token = getCookie('token');
@@ -58,30 +65,25 @@ const Profile = ({ history }) => {
     console.log(token);
     e.preventDefault();
     setFormData({ ...formData, textChange: 'Submitting' });
+    const data = new FormData();
+    data.append('file', avatar);
+    data.append('name', name);
+    data.append('password', password1);
     axios
-      .put(
-        `${process.env.REACT_APP_API_URL}/users/${isAuth()._id}`,
-        {
-          name,
-          password: password1,
+      .put(`${process.env.REACT_APP_API_URL}/users/${isAuth()._id}`, data, {
+        headers: {
+          Authorization: token,
         },
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      )
+      })
       .then((res) => {
-        updateUser(res, () => {
-          toast.success('Profile Updated Successfully');
-          setFormData({ ...formData, textChange: 'Update' });
-        });
+        toast.success('Profile Updated Successfully');
+        setFormData({ ...formData, textChange: 'Update' });
       })
       .catch((err) => {
         console.log(err.response);
       });
   };
-
+  console.log(avatarPreview);
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
       <ToastContainer />
@@ -91,7 +93,21 @@ const Profile = ({ history }) => {
             <h1 className="text-2xl xl:text-3xl font-extrabold">
               Profile Update
             </h1>
-            <Avatar image={avatar} style={{ width: 100, height: 100 }} />
+            <Avatar
+              image={avatarPreview ? avatarPreview : avatar}
+              style={{ width: 100, height: 100 }}
+              onClick={() => {
+                document.getElementById('selectedFile').click();
+              }}
+            />
+            <input
+              type="file"
+              style={{
+                display: 'none',
+              }}
+              onChange={handleChangeAvatar}
+              id="selectedFile"
+            />
             <form
               className="w-full flex-1 mt-8 text-indigo-500"
               onSubmit={handleSubmit}
