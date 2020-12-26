@@ -14,23 +14,6 @@ const Post = ({ history, load, setLoad }) => {
     setImagePreview(URL.createObjectURL(image.target.files[0]));
     setImage(image.target.files[0]);
   };
-
-  const getPosts = () => {
-    const token = getCookie('token');
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/`, {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err.response);
-      });
-  };
-
   const handleSubmit = () => {
     const token = getCookie('token');
     setNotify('Submitting');

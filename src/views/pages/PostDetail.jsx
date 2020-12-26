@@ -1,13 +1,21 @@
+<<<<<<< HEAD
 import React, { useState, useEffect } from "react";
 import { ToastContainer } from "react-toastify";
 import { isAuth, getCookie } from "../../controllers/localStorage";
 import Header from "../components/Header";
+=======
+import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
+import { isAuth, getCookie } from '../../controllers/localStorage';
+import Header from '../components/Header';
+>>>>>>> 244968ed347d58e86d29d9c90053600f09b4282b
 import {
   Avatar,
   Text,
   Button,
   TextArea,
   Image,
+<<<<<<< HEAD
 } from "@fluentui/react-northstar";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
@@ -16,9 +24,21 @@ const PostDetail = ({ history }) => {
   const [isLike, setIsLike] = useState(false);
   const [comment, setComment] = useState("");
   const location = useLocation();
+=======
+  List,
+} from '@fluentui/react-northstar';
+import axios from 'axios';
+import { useLocation } from 'react-router-dom';
+
+const PostDetail = ({ history }) => {
+  const [isLike, setIsLike] = useState(false);
+  const [comment, setComment] = useState('');
+>>>>>>> 244968ed347d58e86d29d9c90053600f09b4282b
   const [data, setData] = useState([]);
   const [number, setNumber] = useState(0);
-  const [image, setImage] = useState(null);
+  const [listComment, setListComment] = useState([]);
+  const [loadComment, setLoadComment] = useState(false);
+  const location = useLocation();
   const checkLiked = (data) => {
     const check = data.indexOf(isAuth()._id);
     return check > -1;
@@ -40,13 +60,19 @@ const PostDetail = ({ history }) => {
         }
       )
       .then((res) => {
+<<<<<<< HEAD
         setComment("");
+=======
+        setComment('');
+        setLoadComment(!loadComment);
+>>>>>>> 244968ed347d58e86d29d9c90053600f09b4282b
         console.log(res.data.message);
       })
       .catch((err) => {
         console.log(err.response);
       });
   };
+
   const getPostById = () => {
     const token = getCookie("token");
     axios
@@ -56,9 +82,7 @@ const PostDetail = ({ history }) => {
         },
       })
       .then((res) => {
-        console.log(res.data.data);
         setData(res.data.data);
-        setImage(res.data.data.image);
         setNumber(res.data.data.likeBy.length);
         setIsLike(checkLiked(res.data.data.likeBy));
       })
@@ -67,10 +91,47 @@ const PostDetail = ({ history }) => {
       });
   };
 
-  useEffect(() => {
-    getPostById();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const getCommentsByPostId = () => {
+    const token = getCookie('token');
+    axios
+      .get(
+        `${process.env.REACT_APP_API_URL}/comment/${location.state.postId}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        const data = [];
+        const arr = res.data.results;
+        arr.forEach((element) => {
+          const { userId, key, avatar, header, headerMedia, content } = element;
+          data.push({
+            key,
+            media: (
+              <Image
+                src={avatar}
+                avatar
+                onClick={() => {
+                  history.push(`/post/u/${userId}`, {
+                    userId: userId,
+                  });
+                }}
+              />
+            ),
+            header,
+            headerMedia,
+            content,
+          });
+        });
+        setListComment(data);
+      })
+      .catch((err) => {
+        toast.error(`abc ${err.response.statusText}`);
+      });
+  };
+
   const likePost = () => {
     const token = getCookie("token");
     axios
@@ -120,6 +181,16 @@ const PostDetail = ({ history }) => {
       });
   };
 
+  useEffect(() => {
+    getPostById();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    getCommentsByPostId();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadComment]);
+
   return (
     <div>
       <Header history={history} flag={false} />
@@ -144,7 +215,11 @@ const PostDetail = ({ history }) => {
           }}
         >
           <div style={{ flex: 4 }}>
+<<<<<<< HEAD
             <Image src={image} style={{ height: "100%" }} />
+=======
+            <Image src={location.state.image} style={{ height: '100%' }} />
+>>>>>>> 244968ed347d58e86d29d9c90053600f09b4282b
           </div>
           <div
             style={{
@@ -165,10 +240,15 @@ const PostDetail = ({ history }) => {
                 marginTop: 10,
               }}
             >
-              <Avatar image={data.avatar} />
+              <Avatar image={location.state.avatar} />
               <Text
+<<<<<<< HEAD
                 content={data.name}
                 style={{ marginLeft: 10, fontSize: 16, fontWeight: "bold" }}
+=======
+                content={location.state.name}
+                style={{ marginLeft: 10, fontSize: 16, fontWeight: 'bold' }}
+>>>>>>> 244968ed347d58e86d29d9c90053600f09b4282b
               />
             </div>
             <div
@@ -182,20 +262,30 @@ const PostDetail = ({ history }) => {
                 paddingTop: 10,
               }}
             >
-              <text>{data.content}</text>
+              <text>{location.state.content}</text>
             </div>
             <div
               style={{
                 width: "100%",
                 flex: 9,
+<<<<<<< HEAD
                 flexDirection: "row",
                 alignItems: "center",
                 display: "flex",
                 paddingLeft: 16,
                 paddingRight: 16,
+=======
+                flexDirection: 'column',
+                display: 'flex',
+>>>>>>> 244968ed347d58e86d29d9c90053600f09b4282b
                 borderBottomWidth: 1,
+                overflow: 'scroll',
               }}
-            ></div>
+            >
+              {listComment ? (
+                <List items={listComment} selectable={true} />
+              ) : null}
+            </div>
             <div
               style={{
                 width: "100%",

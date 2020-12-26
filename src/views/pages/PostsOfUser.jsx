@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
-import { isAuth, getCookie } from '../controllers/localStorage';
-import Header from './components/Header.jsx';
-import Post from './components/Post.jsx';
-import ItemPost from './components/ItemPost.jsx';
+import { isAuth, getCookie } from '../../controllers/localStorage';
+import Header from '../components/Header.jsx';
+import ItemPost from '../components/ItemPost.jsx';
 import axios from 'axios';
+import { useLocation } from 'react-router-dom';
 
-function Home({ history }) {
+function PostOfUser({ history }) {
   const [data, setData] = useState([]);
-  const [load, setLoad] = useState(false);
-  const getPosts = () => {
+  const location = useLocation();
+  const getPostsByUserId = (userId) => {
     const token = getCookie('token');
     axios
-      .get(`${process.env.REACT_APP_API_URL}/`, {
+      .get(`${process.env.REACT_APP_API_URL}/post/u/${userId}`, {
         headers: {
           Authorization: token,
         },
@@ -25,12 +25,13 @@ function Home({ history }) {
       });
   };
   useEffect(() => {
-    getPosts();
-  }, [load]);
+    getPostsByUserId(location.state.userId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div>
-      <Header history={history} flag={true}/>
+      <Header history={history} flag={false} />
       <div
         style={{
           backgroundColor: '#F8F8F8',
@@ -41,7 +42,6 @@ function Home({ history }) {
         }}
       >
         <ToastContainer />
-        <Post load={load} setLoad={setLoad} />
         {data.length ? (
           data.map((item) => {
             return (
@@ -52,7 +52,6 @@ function Home({ history }) {
                 content={item.content}
                 image={item.image}
                 likeBy={item.likeBy}
-                userId={item.userId}
                 history={history}
               />
             );
@@ -65,4 +64,4 @@ function Home({ history }) {
   );
 }
 
-export default Home;
+export default PostOfUser;
