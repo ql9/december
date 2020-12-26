@@ -1,21 +1,14 @@
-<<<<<<< HEAD
 import React, { useState, useEffect } from "react";
-import { ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { isAuth, getCookie } from "../../controllers/localStorage";
 import Header from "../components/Header";
-=======
-import React, { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
-import { isAuth, getCookie } from '../../controllers/localStorage';
-import Header from '../components/Header';
->>>>>>> 244968ed347d58e86d29d9c90053600f09b4282b
 import {
   Avatar,
   Text,
   Button,
   TextArea,
   Image,
-<<<<<<< HEAD
+  List,
 } from "@fluentui/react-northstar";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
@@ -23,17 +16,6 @@ import { useLocation } from "react-router-dom";
 const PostDetail = ({ history }) => {
   const [isLike, setIsLike] = useState(false);
   const [comment, setComment] = useState("");
-  const location = useLocation();
-=======
-  List,
-} from '@fluentui/react-northstar';
-import axios from 'axios';
-import { useLocation } from 'react-router-dom';
-
-const PostDetail = ({ history }) => {
-  const [isLike, setIsLike] = useState(false);
-  const [comment, setComment] = useState('');
->>>>>>> 244968ed347d58e86d29d9c90053600f09b4282b
   const [data, setData] = useState([]);
   const [number, setNumber] = useState(0);
   const [listComment, setListComment] = useState([]);
@@ -60,12 +42,8 @@ const PostDetail = ({ history }) => {
         }
       )
       .then((res) => {
-<<<<<<< HEAD
         setComment("");
-=======
-        setComment('');
         setLoadComment(!loadComment);
->>>>>>> 244968ed347d58e86d29d9c90053600f09b4282b
         console.log(res.data.message);
       })
       .catch((err) => {
@@ -92,7 +70,7 @@ const PostDetail = ({ history }) => {
   };
 
   const getCommentsByPostId = () => {
-    const token = getCookie('token');
+    const token = getCookie("token");
     axios
       .get(
         `${process.env.REACT_APP_API_URL}/comment/${location.state.postId}`,
@@ -215,11 +193,7 @@ const PostDetail = ({ history }) => {
           }}
         >
           <div style={{ flex: 4 }}>
-<<<<<<< HEAD
-            <Image src={image} style={{ height: "100%" }} />
-=======
-            <Image src={location.state.image} style={{ height: '100%' }} />
->>>>>>> 244968ed347d58e86d29d9c90053600f09b4282b
+            <Image src={location.state.image} style={{ height: "100%" }} />
           </div>
           <div
             style={{
@@ -242,13 +216,8 @@ const PostDetail = ({ history }) => {
             >
               <Avatar image={location.state.avatar} />
               <Text
-<<<<<<< HEAD
-                content={data.name}
-                style={{ marginLeft: 10, fontSize: 16, fontWeight: "bold" }}
-=======
                 content={location.state.name}
-                style={{ marginLeft: 10, fontSize: 16, fontWeight: 'bold' }}
->>>>>>> 244968ed347d58e86d29d9c90053600f09b4282b
+                style={{ marginLeft: 10, fontSize: 16, fontWeight: "bold" }}
               />
             </div>
             <div
@@ -268,18 +237,10 @@ const PostDetail = ({ history }) => {
               style={{
                 width: "100%",
                 flex: 9,
-<<<<<<< HEAD
-                flexDirection: "row",
-                alignItems: "center",
+                flexDirection: "column",
                 display: "flex",
-                paddingLeft: 16,
-                paddingRight: 16,
-=======
-                flexDirection: 'column',
-                display: 'flex',
->>>>>>> 244968ed347d58e86d29d9c90053600f09b4282b
                 borderBottomWidth: 1,
-                overflow: 'scroll',
+                overflow: "scroll",
               }}
             >
               {listComment ? (
