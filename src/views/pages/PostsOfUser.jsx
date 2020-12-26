@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { ToastContainer } from 'react-toastify';
-import { isAuth, getCookie } from '../../controllers/localStorage';
-import Header from '../components/Header.jsx';
-import ItemPost from '../components/ItemPost.jsx';
-import axios from 'axios';
-import { useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { ToastContainer } from "react-toastify";
+import { getCookie } from "../../controllers/localStorage";
+import Header from "../components/Header.jsx";
+import ItemPost from "../components/ItemPost.jsx";
+import axios from "axios";
+import { useLocation } from "react-router-dom";
 
 function PostOfUser({ history }) {
   const [data, setData] = useState([]);
   const location = useLocation();
   const getPostsByUserId = (userId) => {
-    const token = getCookie('token');
+    const token = getCookie("token");
     axios
       .get(`${process.env.REACT_APP_API_URL}/post/u/${userId}`, {
         headers: {
@@ -34,11 +34,11 @@ function PostOfUser({ history }) {
       <Header history={history} flag={false} />
       <div
         style={{
-          backgroundColor: '#F8F8F8',
-          display: 'flex',
-          alignItems: 'center',
-          minHeight: '100vh',
-          flexDirection: 'column',
+          backgroundColor: "#F8F8F8",
+          display: "flex",
+          alignItems: "center",
+          minHeight: "100vh",
+          flexDirection: "column",
         }}
       >
         <ToastContainer />

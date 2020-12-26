@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { ToastContainer } from 'react-toastify';
-import { isAuth, getCookie } from '../controllers/localStorage';
-import Header from './components/Header.jsx';
-import Post from './components/Post.jsx';
-import ItemPost from './components/ItemPost.jsx';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import { ToastContainer } from "react-toastify";
+import { getCookie } from "../controllers/localStorage";
+import Header from "./components/Header.jsx";
+import Post from "./components/Post.jsx";
+import ItemPost from "./components/ItemPost.jsx";
+import axios from "axios";
 
 function Home({ history }) {
   const [data, setData] = useState([]);
   const [load, setLoad] = useState(false);
   const getPosts = () => {
-    const token = getCookie('token');
+    const token = getCookie("token");
     axios
       .get(`${process.env.REACT_APP_API_URL}/`, {
         headers: {
@@ -30,14 +30,14 @@ function Home({ history }) {
 
   return (
     <div>
-      <Header history={history} flag={true}/>
+      <Header history={history} flag={true} />
       <div
         style={{
-          backgroundColor: '#F8F8F8',
-          display: 'flex',
-          alignItems: 'center',
-          minHeight: '100vh',
-          flexDirection: 'column',
+          backgroundColor: "#F8F8F8",
+          display: "flex",
+          alignItems: "center",
+          minHeight: "100vh",
+          flexDirection: "column",
         }}
       >
         <ToastContainer />
