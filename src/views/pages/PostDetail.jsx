@@ -92,7 +92,7 @@ const PostDetail = ({ history }) => {
                 src={avatar}
                 avatar
                 onClick={() => {
-                  history.push(`/post/u/${userId}`, {
+                  history.push(`/posts/u/${userId}`, {
                     userId: userId,
                   });
                 }}
