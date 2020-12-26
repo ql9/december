@@ -8,6 +8,7 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "axios": "^0.19.2",
+    "firebase": "^8.2.1",
     "js-cookie": "^2.2.1",
     "jsonwebtoken": "^8.5.1",
     "react": "^16.13.1",
@@ -19,7 +20,7 @@
     "react-toastify": "^5.5.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "SSL_CRT_FILE=./.cert/cert.pem SSL_KEY_FILE=./.cert/key.pem react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
