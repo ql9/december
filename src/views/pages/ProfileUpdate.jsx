@@ -3,13 +3,14 @@ import authSvg from "../assests/update.svg";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import { isAuth, getCookie, signout } from "../../controllers/localStorage";
+import { storage } from "../../controllers/firebase";
 import { Avatar } from "@fluentui/react-northstar";
 
 const Profile = ({ history }) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    password1: "",
+    password: "",
     textChange: "Update",
   });
   const [avatar, setAvatar] = useState(null);
@@ -49,35 +50,48 @@ const Profile = ({ history }) => {
       });
   };
 
-  const { name, email, password1, textChange } = formData;
+  const { name, email, password, textChange } = formData;
 
   const handleChange = (text) => (e) => {
     setFormData({ ...formData, [text]: e.target.value });
   };
 
   const handleSubmit = (e) => {
-    const token = getCookie("token");
-    console.log(token);
     e.preventDefault();
+    const token = getCookie("token");
     setFormData({ ...formData, textChange: "Submitting" });
-    const data = new FormData();
-    data.append("file", avatar);
-    data.append("name", name);
-    data.append("password", password1);
-    axios
-      .put(`${process.env.REACT_APP_API_URL}/users/${isAuth()._id}`, data, {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        toast.success("Profile Updated Successfully");
-        setFormData({ ...formData, textChange: "Update" });
-      })
-      .catch((err) => {
-        console.log(err.response);
-      });
+    const uploadTask = storage.ref(`/images/${avatar.name}`).put(avatar);
+    uploadTask.on("state_changed", console.log, console.error, () => {
+      storage
+        .ref("images")
+        .child(avatar.name)
+        .getDownloadURL()
+        .then((url) => {
+          axios
+            .put(
+              `${process.env.REACT_APP_API_URL}/users/${isAuth()._id}`,
+              {
+                avatar: url,
+                name,
+                password,
+              },
+              {
+                headers: {
+                  Authorization: token,
+                },
+              }
+            )
+            .then((res) => {
+              toast.success(res.data.message);
+              setFormData({ ...formData, textChange: "Update" });
+            })
+            .catch((err) => {
+              console.log(err.response);
+            });
+        });
+    });
   };
+
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
       <ToastContainer />
@@ -127,7 +141,7 @@ const Profile = ({ history }) => {
                   type="password"
                   placeholder="Password"
                   onChange={handleChange("password1")}
-                  value={password1}
+                  value={password}
                 />
                 <button
                   type="submit"

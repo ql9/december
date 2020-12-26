@@ -16,7 +16,6 @@ import { useLocation } from "react-router-dom";
 const PostDetail = ({ history }) => {
   const [isLike, setIsLike] = useState(false);
   const [comment, setComment] = useState("");
-  const [data, setData] = useState([]);
   const [number, setNumber] = useState(0);
   const [listComment, setListComment] = useState([]);
   const [loadComment, setLoadComment] = useState(false);
@@ -60,7 +59,6 @@ const PostDetail = ({ history }) => {
         },
       })
       .then((res) => {
-        setData(res.data.data);
         setNumber(res.data.data.likeBy.length);
         setIsLike(checkLiked(res.data.data.likeBy));
       })
