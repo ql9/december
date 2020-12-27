@@ -60,10 +60,10 @@ const Profile = ({ history }) => {
     e.preventDefault();
     const token = getCookie("token");
     setFormData({ ...formData, textChange: "Submitting" });
-    const uploadTask = storage.ref(`/images/${avatar.name}`).put(avatar);
-    uploadTask.on("state_changed", console.log, console.error, () => {
+    const uploadTask = storage.ref(`/avatars/${avatar.name}`).put(avatar);
+    uploadTask.on("state_changed", () => {
       storage
-        .ref("images")
+        .ref("avatars")
         .child(avatar.name)
         .getDownloadURL()
         .then((url) => {
