@@ -58,7 +58,6 @@ const ItemPost = ({
             postId: postId,
             userId: userId,
             headerMedia: headerMedia,
-            getPosts: getPosts,
           });
         }}
       />
