@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { toast } from "react-toastify";
 import { isAuth, getCookie } from "../../controllers/localStorage";
 import Header from "../components/Header";
 import {
@@ -9,21 +8,25 @@ import {
   TextArea,
   Image,
   List,
+  MoreIcon,
+  Popup,
+  Dialog,
+  TrashCanIcon,
+  SendIcon,
+  ItemLayout,
 } from "@fluentui/react-northstar";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
+import Like from "../components/LikePost";
+import Title from "../components/Title";
 
 const PostDetail = ({ history }) => {
-  const [isLike, setIsLike] = useState(false);
+  const location = useLocation();
+  const [content, setContent] = useState(location.state.content);
   const [comment, setComment] = useState("");
-  const [number, setNumber] = useState(0);
   const [listComment, setListComment] = useState([]);
   const [loadComment, setLoadComment] = useState(false);
-  const location = useLocation();
-  const checkLiked = (data) => {
-    const check = data.indexOf(isAuth()._id);
-    return check > -1;
-  };
+
   const postComment = (content) => {
     const token = getCookie("token");
     axios
@@ -50,23 +53,6 @@ const PostDetail = ({ history }) => {
       });
   };
 
-  const getPostById = () => {
-    const token = getCookie("token");
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/post/${location.state.postId}`, {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        setNumber(res.data.data.likeBy.length);
-        setIsLike(checkLiked(res.data.data.likeBy));
-      })
-      .catch((err) => {
-        console.log(err.response);
-      });
-  };
-
   const getCommentsByPostId = () => {
     const token = getCookie("token");
     axios
@@ -86,9 +72,8 @@ const PostDetail = ({ history }) => {
           data.push({
             key,
             media: (
-              <Image
-                src={avatar}
-                avatar
+              <Avatar
+                image={avatar}
                 onClick={() => {
                   history.push(`/posts/u/${userId}`, {
                     userId: userId,
@@ -96,75 +81,65 @@ const PostDetail = ({ history }) => {
                 }}
               />
             ),
-            header,
+            header: <Text weight="semibold" content={header} />,
             headerMedia,
             content,
+            endMedia: (
+              <Popup
+                align="end"
+                position="above"
+                trigger={
+                  <MoreIcon
+                    title="More"
+                    hidden={userId === isAuth()._id ? false : true}
+                  />
+                }
+                content={
+                  <div>
+                    <Dialog
+                      cancelButton="Cancel"
+                      confirmButton="Yes"
+                      onConfirm={() => {
+                        deleteComment(key);
+                        setLoadComment(!loadComment);
+                      }}
+                      header="Do you want delete this comment?"
+                      trigger={
+                        <Button icon={<TrashCanIcon />} text content="Delete" />
+                      }
+                    />
+                  </div>
+                }
+              />
+            ),
           });
         });
         setListComment(data);
       })
       .catch((err) => {
-        toast.error(`abc ${err.response.statusText}`);
+        // toast.error(`abc ${err.response.statusText}`);
       });
   };
 
-  const likePost = () => {
+  const deleteComment = (commentId) => {
     const token = getCookie("token");
     axios
-      .put(
-        `${process.env.REACT_APP_API_URL}/post/like`,
-        {
-          postId: location.state.postId,
-          userId: `${isAuth()._id}`,
+      .delete(`${process.env.REACT_APP_API_URL}/comment/${commentId}`, {
+        headers: {
+          Authorization: token,
         },
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      )
-      .then((res) => {
-        console.log(res);
-        setIsLike(true);
-        setNumber(number + 1);
+      })
+      .then(() => {
+        setLoadComment(!loadComment);
       })
       .catch((err) => {
         console.log(err.response);
       });
   };
-  const unLikePost = () => {
-    const token = getCookie("token");
-    axios
-      .put(
-        `${process.env.REACT_APP_API_URL}/post/unlike`,
-        {
-          postId: location.state.postId,
-          userId: `${isAuth()._id}`,
-        },
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      )
-      .then((res) => {
-        console.log(res);
-        setIsLike(false);
-        setNumber(number - 1);
-      })
-      .catch((err) => {
-        console.log(err.response);
-      });
-  };
-
-  useEffect(() => {
-    getPostById();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     getCommentsByPostId();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line
   }, [loadComment]);
 
   return (
@@ -190,8 +165,29 @@ const PostDetail = ({ history }) => {
             borderWidth: 1,
           }}
         >
-          <div style={{ flex: 4 }}>
-            <Image src={location.state.image} style={{ height: "100%" }} />
+          <div
+            style={{
+              display: "inline-block",
+              position: "relative",
+              flex: 5,
+              background: "black",
+            }}
+          >
+            <Image
+              src={location.state.image}
+              style={{
+                maxHeight: "100%",
+                maxWidth: "100%",
+                width: "100%",
+                height: "auto",
+                position: "absolute",
+                top: 0,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                margin: "auto",
+              }}
+            />
           </div>
           <div
             style={{
@@ -200,128 +196,63 @@ const PostDetail = ({ history }) => {
               flexDirection: "column",
             }}
           >
-            <div
+            <Title
+              avatar={location.state.avatar}
+              name={location.state.name}
+              postId={location.state.postId}
+              headerMedia={location.state.headerMedia}
+              userId={location.state.userId}
+              history={history}
+              image={location.state.image}
+              content={content}
+              setContent={setContent}
+            />
+            <Text
               style={{
                 width: "100%",
-                flex: 1,
-                flexDirection: "row",
-                alignItems: "center",
-                display: "flex",
-                paddingLeft: 16,
-                paddingRight: 16,
-                marginTop: 10,
-              }}
-            >
-              <Avatar image={location.state.avatar} />
-              <Text
-                content={location.state.name}
-                style={{ marginLeft: 10, fontSize: 16, fontWeight: "bold" }}
-              />
-            </div>
-            <div
-              style={{
-                width: "100%",
-                flex: 2,
                 borderBottomWidth: 1,
                 display: "flex",
-                paddingLeft: 16,
-                paddingRight: 16,
-                paddingTop: 10,
+                padding: 20,
+                fontSize: 18,
               }}
-            >
-              <text>{location.state.content}</text>
-            </div>
-            <div
-              style={{
-                width: "100%",
-                flex: 9,
-                flexDirection: "column",
-                display: "flex",
-                borderBottomWidth: 1,
-                overflow: "scroll",
-              }}
-            >
-              {listComment ? (
-                <List items={listComment} selectable={true} />
-              ) : null}
-            </div>
-            <div
-              style={{
-                width: "100%",
-                flex: 1,
-                borderBottomWidth: 1,
-                flexDirection: "row",
-                alignItems: "center",
-                display: "flex",
-                paddingLeft: 16,
-                paddingRight: 16,
-              }}
-            >
-              {isLike ? (
-                <Button
-                  icon={<i class="fas fa-heart fa-2x"></i>}
-                  text
-                  iconOnly
-                  onClick={() => {
-                    unLikePost();
-                    setIsLike(false);
-                  }}
-                />
-              ) : (
-                <Button
-                  icon={<i class="far fa-heart fa-2x"></i>}
-                  text
-                  iconOnly
-                  onClick={() => {
-                    likePost();
-                    setIsLike(true);
-                  }}
-                />
-              )}
-              <Button
-                icon={
-                  <i
-                    class="far fa-comment fa-2x"
-                    style={{ marginLeft: 20 }}
-                  ></i>
-                }
-                text
-                iconOnly
-              />
-              <text style={{ marginLeft: 20, fontWeight: "bold" }}>
-                {number} likes
-              </text>
-            </div>
-            <div
-              style={{
-                width: "100%",
-                flex: 2,
-                flexDirection: "row",
-                display: "flex",
-                paddingLeft: 16,
-                paddingRight: 16,
-              }}
-            >
-              <TextArea
-                placeholder="Type comment here..."
+              content={content}
+            />
+            {listComment ? (
+              <List
                 style={{
-                  flex: 10,
-                  backgroundColor: "#FFFFFF",
-                  paddingTop: 37,
+                  width: "100%",
+                  flex: 9,
+                  flexDirection: "column",
+                  display: "flex",
+                  borderBottomWidth: 1,
+                  overflow: "scroll",
                 }}
-                onChange={(text) => setComment(text.target.value)}
-                value={comment}
+                items={listComment}
+                selectable={true}
               />
-              <Button
-                content="Comment"
-                text
-                style={{ alignSelf: "center" }}
-                disabled={comment ? false : true}
-                onClick={() => {
-                  postComment(comment);
-                }}
-              />
-            </div>
+            ) : null}
+            <Like postId={location.state.postId} />
+            <ItemLayout
+              content={
+                <TextArea
+                  style={{ paddingTop: 20, background: "white" }}
+                  placeholder="Type comment here..."
+                  onChange={(text) => setComment(text.target.value)}
+                  value={comment}
+                />
+              }
+              endMedia={
+                <Button
+                  text
+                  iconOnly
+                  icon={<SendIcon size="large" rotate={-15} />}
+                  disabled={comment ? false : true}
+                  onClick={() => {
+                    postComment(comment);
+                  }}
+                />
+              }
+            />
           </div>
         </div>
       </div>

@@ -9,15 +9,14 @@ import Profile from "./views/pages/ProfileUpdate.jsx";
 import ForgetPassword from "./views/pages/ForgetPassword.jsx";
 import ResetPassword from "./views/pages/ResetPassword.jsx";
 import PostDetail from "./views/pages/PostDetail.jsx";
-import PostOfUser from './views/pages/PostsOfUser.jsx';
-import { Provider, teamsTheme } from '@fluentui/react-northstar'
+import PostOfUser from "./views/pages/PostsOfUser.jsx";
+import { Provider, teamsTheme } from "@fluentui/react-northstar";
 import RedirectRoute from "./app.route";
 import "react-toastify/dist/ReactToastify.css";
 ReactDOM.render(
   <Provider theme={teamsTheme}>
     <BrowserRouter>
       <Switch>
-        {/* <Route path="/" exact render={(props) => <Home {...props} />} /> */}
         <Route path="/login" exact render={(props) => <Login {...props} />} />
         <Route
           path="/register"

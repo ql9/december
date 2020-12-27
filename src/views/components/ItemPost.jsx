@@ -1,192 +1,76 @@
-import React, { useState, useEffect } from 'react';
-import { Avatar, Text, Button, Image } from '@fluentui/react-northstar';
-import { isAuth, getCookie } from '../../controllers/localStorage';
-import axios from 'axios';
+import React from "react";
+import { Text, Image } from "@fluentui/react-northstar";
+
+import Title from "./Title";
+import Like from "./LikePost";
 
 const ItemPost = ({
-  likeBy,
   avatar,
   name,
   content,
   image,
   postId,
   userId,
+  headerMedia,
   history,
+  getPosts,
 }) => {
-  const [isLike, setIsLike] = useState(false);
-  const [number, setNumber] = useState(likeBy.length);
-
-  const checkLiked = () => {
-    const check = likeBy.indexOf(isAuth()._id);
-    return check > -1;
-  };
-
-  useEffect(() => {
-    setIsLike(checkLiked());
-    console.log(checkLiked());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const likePost = () => {
-    const token = getCookie('token');
-    axios
-      .put(
-        `${process.env.REACT_APP_API_URL}/post/like`,
-        {
-          postId: postId,
-          userId: `${isAuth()._id}`,
-        },
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      )
-      .then((res) => {
-        console.log(res);
-        setIsLike(true);
-        setNumber(number + 1);
-      })
-      .catch((err) => {
-        console.log(err.response);
-      });
-  };
-  const unLikePost = () => {
-    const token = getCookie('token');
-    axios
-      .put(
-        `${process.env.REACT_APP_API_URL}/post/unlike`,
-        {
-          postId: postId,
-          userId: `${isAuth()._id}`,
-        },
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      )
-      .then((res) => {
-        console.log(res);
-        setIsLike(false);
-        setNumber(number - 1);
-      })
-      .catch((err) => {
-        console.log(err.response);
-      });
-  };
-
   return (
     <div
       style={{
-        display: 'flex',
-        flexDirection: 'column',
-        height: 1000,
+        display: "flex",
+        flexDirection: "column",
         marginTop: 30,
         width: 800,
-        backgroundColor: '#FFFFFF',
+        backgroundColor: "#FFFFFF",
         borderRadius: 10,
         borderWidth: 1,
         marginBottom: 10,
       }}
     >
-      <div
+      <Title
+        avatar={avatar}
+        name={name}
+        postId={postId}
+        headerMedia={headerMedia}
+        userId={userId}
+        history={history}
+        getPosts={getPosts}
+        image={image}
+        content={content}
+      />
+      <Text
+        content={content}
         style={{
-          width: '100%',
-          flex: 1,
-          borderBottomWidth: 1,
-          flexDirection: 'row',
-          alignItems: 'center',
-          display: 'flex',
-          paddingLeft: 16,
-          paddingRight: 16,
+          padding: 16,
+          fontSize: 16,
         }}
-      >
-        <Avatar image={avatar} />
-        <Text
-          onClick={() => {
-            history.push(`/posts/u/${userId}`, {
-              userId: userId,
-            });
-          }}
-          content={name}
-          style={{ marginLeft: 10, fontSize: 16, fontWeight: 'bold' }}
-        />
-      </div>
-      <div
-        style={{
-          width: '100%',
-          flex: 15,
-          display: 'flex',
-          flexDirection: 'column',
+      />
+      <Image
+        src={image}
+        style={{ height: "100%", width: "100%", maxHeight: 850, maxWidth: 850 }}
+        onClick={() => {
+          history.push(`/posts/${postId}`, {
+            avatar: avatar,
+            name: name,
+            content: content,
+            image: image,
+            postId: postId,
+            userId: userId,
+            headerMedia: headerMedia,
+            getPosts: getPosts,
+          });
         }}
-      >
-        <Text
-          content={content}
-          style={{
-            flex: 1,
-            display: 'flex',
-            marginTop: 10,
-            marginLeft: 16,
-            marginRight: 16,
-          }}
-        />
-        <div style={{ flex: 5 }}>
-          <Image src={image} style={{ height: 750, width: '100%' }} />
-        </div>
-      </div>
+      />
       <div
         style={{
-          width: '100%',
-          flex: 1,
+          width: "100%",
           borderTopWidth: 1,
-          flexDirection: 'row',
-          alignItems: 'center',
-          display: 'flex',
-          paddingLeft: 16,
-          paddingRight: 16,
+          alignItems: "center",
+          padding: 16,
         }}
       >
-        {isLike ? (
-          <Button
-            icon={<i class="fas fa-heart fa-2x"></i>}
-            text
-            iconOnly
-            onClick={() => {
-              setIsLike(false);
-              unLikePost();
-            }}
-          />
-        ) : (
-          <Button
-            icon={<i class="far fa-heart fa-2x"></i>}
-            text
-            iconOnly
-            onClick={() => {
-              setIsLike(true);
-              likePost();
-            }}
-          />
-        )}
-
-        <Button
-          icon={<i class="far fa-comment fa-2x" style={{ marginLeft: 20 }}></i>}
-          text
-          iconOnly
-          onClick={() => {
-            history.push(`/posts/${postId}`, {
-              avatar: avatar,
-              name: name,
-              content: content,
-              image: image,
-              likeBy: likeBy,
-              postId: postId,
-            });
-          }}
-        />
-        <text style={{ marginLeft: 20, fontWeight: 'bold' }}>
-          {number} likes
-        </text>
+        <Like postId={postId} />
       </div>
     </div>
   );

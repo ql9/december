@@ -41,17 +41,27 @@ const Header = ({ history, flag }) => {
         display: "flex",
       }}
     >
-      <h1 style={{ flex: 10, fontSize: 30 }}>December</h1>
+      <h1
+        style={{ flex: 10, fontSize: 30 }}
+        onClick={() => {
+          if (flag) {
+            window.location.reload();
+          } else {
+            history.goBack();
+          }
+        }}
+      >
+        December
+      </h1>
       <button
         style={{ flex: 0.5, marginRight: 16 }}
         onClick={() => {
-          if(flag){
+          if (flag) {
             window.location.reload();
-          }
-          else{
+          } else {
             history.goBack();
           }
-         }}
+        }}
       >
         <i class="fas fa-home fa-2x"></i>
       </button>
@@ -61,7 +71,7 @@ const Header = ({ history, flag }) => {
           history.push("/profile");
         }}
       >
-      <Avatar image={avatarUrl} />
+        <Avatar image={avatarUrl} />
       </button>
       <button
         style={{ flex: 0.5, marginRight: 16 }}
