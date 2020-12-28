@@ -146,11 +146,7 @@ const CreatePost = ({ getPosts }) => {
               setImage(null);
               setImagePreview(null);
               setOpen(false);
-            } else {
-              console.log("khong dong");
             }
-            // deleteComment(key);
-            // setLoadComment(!loadComment);
           }}
           onOpen={() => setOpen(true)}
           onCancel={() => {
