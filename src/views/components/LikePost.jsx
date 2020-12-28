@@ -47,7 +47,7 @@ const Like = ({ postId }) => {
         }
       )
       .then((res) => {
-        console.log(res);
+        // console.log(res);
       })
       .catch((err) => {
         console.log(err.response);
@@ -70,7 +70,7 @@ const Like = ({ postId }) => {
         }
       )
       .then((res) => {
-        console.log(res);
+        // console.log(res);
       })
       .catch((err) => {
         console.log(err.response);

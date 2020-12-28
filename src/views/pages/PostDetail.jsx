@@ -46,7 +46,7 @@ const PostDetail = ({ history }) => {
       .then((res) => {
         setComment("");
         setLoadComment(!loadComment);
-        console.log(res.data.message);
+        // console.log(res.data.message);
       })
       .catch((err) => {
         console.log(err.response);

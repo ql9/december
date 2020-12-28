@@ -35,7 +35,7 @@ const Profile = ({ history }) => {
         },
       })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         const { name, email } = res.data.user;
         setAvatar(res.data.user.avatar);
         setFormData({ ...formData, name, email });
@@ -86,7 +86,7 @@ const Profile = ({ history }) => {
               setFormData({ ...formData, textChange: "Update" });
             })
             .catch((err) => {
-              console.log(err.response);
+              // console.log(err.response);
             });
         });
     });

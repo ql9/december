@@ -20,7 +20,7 @@ const Activate = ({ match, history }) => {
       setFormData({ ...formData, name, token });
     }
 
-    console.log(token, name);
+    // console.log(token, name);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [match.params]);
   const { name, token } = formData;

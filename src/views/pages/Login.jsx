@@ -24,7 +24,7 @@ const Login = ({ history }) => {
         idToken: tokenId,
       })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         informParent(res);
       })
       .catch((error) => {
@@ -43,7 +43,7 @@ const Login = ({ history }) => {
         accessToken,
       })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         informParent(res);
       })
       .catch((error) => {
@@ -51,17 +51,17 @@ const Login = ({ history }) => {
       });
   };
   const responseGoogle = (response) => {
-    console.log(response);
+    // console.log(response);
     sendGoogleToken(response.tokenId);
   };
 
   const responseFacebook = (response) => {
-    console.log(response);
+    // console.log(response);
     sendFacebookToken(response.accessToken);
   };
 
   const handleSubmit = (e) => {
-    console.log(process.env.REACT_APP_API_URL);
+    // console.log(process.env.REACT_APP_API_URL);
     e.preventDefault();
     if (email && password1) {
       setFormData({ ...formData, textChange: "Submitting" });

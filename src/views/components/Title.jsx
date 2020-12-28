@@ -142,8 +142,6 @@ const Title = ({
                     setContent_e(content_e);
                     setOpenEdit(false);
                     setOpen(false);
-                  } else {
-                    console.log("khong dong");
                   }
                 }}
                 onOpen={() => setOpenEdit(true)}

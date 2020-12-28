@@ -52,7 +52,7 @@ const Register = () => {
               password2: "",
               textChange: "Sign Up",
             });
-            console.log(err);
+            // console.log(err);
           });
       } else {
         toast.error("Passwords don't matches");

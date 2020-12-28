@@ -35,7 +35,7 @@ const ResetPassword = ({ match }) => {
           resetPasswordLink: token,
         })
         .then((res) => {
-          console.log(res.data.message);
+          // console.log(res.data.message);
           setFormData({
             ...formData,
             password1: "",
