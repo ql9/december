@@ -69,7 +69,7 @@ const ItemPost = ({
           padding: 16,
         }}
       >
-        <Like postId={postId} />
+        <Like postId={postId} history={history} />
       </div>
     </div>
   );

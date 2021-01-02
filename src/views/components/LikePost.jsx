@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@fluentui/react-northstar";
 
-import { isAuth, getCookie } from "../../controllers/localStorage";
+import { isAuth, getCookie, signout } from "../../controllers/localStorage";
 import axios from "axios";
 
-const Like = ({ postId }) => {
+const Like = ({ postId, history }) => {
   const [isLike, setLike] = useState(false);
   const [number, setNumber] = useState(0);
 
@@ -27,6 +27,9 @@ const Like = ({ postId }) => {
         setNumber(likeBy.length);
       })
       .catch((err) => {
+        if (err.response.status === 401) {
+          signout();
+        }
         console.log(err.response);
       });
   };
@@ -50,6 +53,10 @@ const Like = ({ postId }) => {
         // console.log(res);
       })
       .catch((err) => {
+        if (err.response.status === 401) {
+          signout();
+          history.push("/login");
+        }
         console.log(err.response);
       });
   };
@@ -73,6 +80,10 @@ const Like = ({ postId }) => {
         // console.log(res);
       })
       .catch((err) => {
+        if (err.response.status === 401) {
+          signout();
+          history.push("/login");
+        }
         console.log(err.response);
       });
   };

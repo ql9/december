@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Avatar } from "@fluentui/react-northstar";
 import { signout, getCookie, isAuth } from "../../controllers/localStorage";
-import { toast } from "react-toastify";
 import axios from "axios";
 
 const Header = ({ history, flag }) => {
@@ -24,7 +23,10 @@ const Header = ({ history, flag }) => {
         setAvatar(res.data.user.avatar);
       })
       .catch((err) => {
-        toast.error(`Error To Your Information ${err.response.statusText}`);
+        if (err.response.status === 401) {
+          signout();
+          history.push("/login");
+        }
       });
   };
 
@@ -76,10 +78,8 @@ const Header = ({ history, flag }) => {
       <button
         style={{ flex: 0.5, marginRight: 16 }}
         onClick={() => {
-          signout(() => {
-            toast.error("Signout Successfully");
-            history.push("/login");
-          });
+          signout();
+          history.push("/login");
         }}
       >
         <i class="fas fa-sign-out-alt fa-2x"></i>

@@ -62,10 +62,10 @@ export const isAuth = () => {
   }
 };
 
-export const signout = (next) => {
+export const signout = () => {
   removeCookie("token");
   removeLocalStorage("user");
-  next();
+  // next();
 };
 
 export const updateUser = (response, next) => {

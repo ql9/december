@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { ToastContainer } from "react-toastify";
-import { getCookie } from "../../controllers/localStorage";
+import { getCookie, signout } from "../../controllers/localStorage";
 import Header from "../components/Header.jsx";
 import ItemPost from "../components/ItemPost.jsx";
 import axios from "axios";
@@ -21,6 +21,10 @@ function PostOfUser({ history }) {
         setData(res.data.data);
       })
       .catch((err) => {
+        if (err.response.status === 401) {
+          signout();
+          history.push("/login");
+        }
         console.log(err.response);
       });
   };

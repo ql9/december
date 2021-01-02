@@ -14,7 +14,7 @@ import {
   Image,
 } from "@fluentui/react-northstar";
 
-import { isAuth, getCookie } from "../../controllers/localStorage";
+import { isAuth, getCookie, signout } from "../../controllers/localStorage";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -53,6 +53,10 @@ const Title = ({
         toast.success("Deleted");
       })
       .catch((err) => {
+        if (err.response.status === 401) {
+          signout();
+          history.push("/login");
+        }
         console.log(err.response);
       });
   };
@@ -78,6 +82,10 @@ const Title = ({
         toast.success(res.data.message);
       })
       .catch((err) => {
+        if (err.response.status === 401) {
+          signout();
+          history.push("/login");
+        }
         setContent(content_e);
         toast.success("Updated Post Successfully");
       });

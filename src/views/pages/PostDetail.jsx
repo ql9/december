@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { isAuth, getCookie } from "../../controllers/localStorage";
+import { isAuth, getCookie, signout } from "../../controllers/localStorage";
 import Header from "../components/Header";
 import {
   Avatar,
@@ -49,6 +49,9 @@ const PostDetail = ({ history }) => {
         // console.log(res.data.message);
       })
       .catch((err) => {
+        if (err.response.status === 401) {
+          signout();
+        }
         console.log(err.response);
       });
   };
@@ -117,6 +120,10 @@ const PostDetail = ({ history }) => {
         setListComment(data);
       })
       .catch((err) => {
+        if (err.response.status === 401) {
+          signout();
+          history.push("/login");
+        }
         // toast.error(`abc ${err.response.statusText}`);
       });
   };
@@ -133,6 +140,10 @@ const PostDetail = ({ history }) => {
         setLoadComment(!loadComment);
       })
       .catch((err) => {
+        if (err.response.status === 401) {
+          signout();
+          history.push("/login");
+        }
         console.log(err.response);
       });
   };
@@ -231,7 +242,10 @@ const PostDetail = ({ history }) => {
                 selectable={true}
               />
             ) : null}
-            <Like postId={location.state.postId} />
+            <Like
+              postId={location.state.postId}
+              history={location.state.history}
+            />
             <ItemLayout
               content={
                 <TextArea

@@ -12,12 +12,12 @@ import {
   FilesImageIcon,
 } from "@fluentui/react-northstar";
 
-import { isAuth, getCookie } from "../../controllers/localStorage";
+import { isAuth, getCookie, signout } from "../../controllers/localStorage";
 import { storage } from "../../controllers/firebase";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const CreatePost = ({ getPosts }) => {
+const CreatePost = ({ getPosts, history }) => {
   const [name, setName] = useState(null);
   const [avatar, setAvatar] = useState(null);
   const [open, setOpen] = useState({
@@ -44,6 +44,7 @@ const CreatePost = ({ getPosts }) => {
   useEffect(() => {
     getUser();
     setOpen(false);
+    // eslint-disable-next-line
   }, []);
 
   const getUser = () => {
@@ -59,7 +60,10 @@ const CreatePost = ({ getPosts }) => {
         setAvatar(res.data.user.avatar);
       })
       .catch((err) => {
-        toast.error(`Error To Your Information ${err.response.statusText}`);
+        if (err.response.status === 401) {
+          signout();
+          history.push("/login");
+        }
       });
   };
 
@@ -90,6 +94,10 @@ const CreatePost = ({ getPosts }) => {
             toast.success(res.data.message);
           })
           .catch((err) => {
+            if (err.response.status === 401) {
+              signout();
+              history.push("/login");
+            }
             console.log(err.response);
           });
       });

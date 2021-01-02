@@ -35,17 +35,14 @@ const Profile = ({ history }) => {
         },
       })
       .then((res) => {
-        // console.log(res.data);
         const { name, email } = res.data.user;
         setAvatar(res.data.user.avatar);
         setFormData({ ...formData, name, email });
       })
       .catch((err) => {
-        toast.error(`Error To Your Information ${err.response.statusText}`);
         if (err.response.status === 401) {
-          signout(() => {
-            history.push("/login");
-          });
+          signout();
+          history.push("/login");
         }
       });
   };
@@ -86,6 +83,10 @@ const Profile = ({ history }) => {
               setFormData({ ...formData, textChange: "Update" });
             })
             .catch((err) => {
+              if (err.response.status === 401) {
+                signout();
+                history.push("/login");
+              }
               // console.log(err.response);
             });
         });
