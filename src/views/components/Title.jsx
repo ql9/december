@@ -54,8 +54,7 @@ const Title = ({
       })
       .catch((err) => {
         if (err.response.status === 401) {
-          signout();
-          history.push("/login");
+          signout(() => history.push("/login"));
         }
         console.log(err.response);
       });
@@ -80,11 +79,13 @@ const Title = ({
       .then((res) => {
         getPosts();
         toast.success(res.data.message);
+        setContent_e(content_e);
+        setOpenEdit(false);
+        setOpen(false);
       })
       .catch((err) => {
         if (err.response.status === 401) {
-          signout();
-          history.push("/login");
+          signout(() => history.push("/login"));
         }
         setContent(content_e);
         toast.success("Updated Post Successfully");
@@ -147,9 +148,6 @@ const Title = ({
                 onConfirm={() => {
                   if (content_e) {
                     handleSubmit();
-                    setContent_e(content_e);
-                    setOpenEdit(false);
-                    setOpen(false);
                   }
                 }}
                 onOpen={() => setOpenEdit(true)}
@@ -184,8 +182,8 @@ const Title = ({
                       style={{
                         height: "auto",
                         width: "auto",
-                        // maxWidth: 600,
-                        // maxHeight: 600,
+                        maxWidth: 600,
+                        maxHeight: 600,
                       }}
                     />
                   </div>

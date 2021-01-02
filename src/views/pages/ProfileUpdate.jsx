@@ -41,8 +41,7 @@ const Profile = ({ history }) => {
       })
       .catch((err) => {
         if (err.response.status === 401) {
-          signout();
-          history.push("/login");
+          signout(() => history.push("/login"));
         }
       });
   };
@@ -53,44 +52,46 @@ const Profile = ({ history }) => {
     setFormData({ ...formData, [text]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const token = getCookie("token");
     setFormData({ ...formData, textChange: "Submitting" });
-    const uploadTask = storage.ref(`/avatars/${avatar.name}`).put(avatar);
-    uploadTask.on("state_changed", () => {
-      storage
-        .ref("avatars")
-        .child(avatar.name)
-        .getDownloadURL()
-        .then((url) => {
-          axios
-            .put(
-              `${process.env.REACT_APP_API_URL}/users/${isAuth()._id}`,
-              {
-                avatar: url,
-                name,
-                password,
-              },
-              {
-                headers: {
-                  Authorization: token,
+    await storage
+      .ref(`/avatars/${avatar.name}`)
+      .put(avatar)
+      .then(async () => {
+        await storage
+          .ref("avatars")
+          .child(avatar.name)
+          .getDownloadURL()
+          .then((url) => {
+            axios
+              .put(
+                `${process.env.REACT_APP_API_URL}/users/${isAuth()._id}`,
+                {
+                  avatar: url,
+                  name,
+                  password,
                 },
-              }
-            )
-            .then((res) => {
-              toast.success(res.data.message);
-              setFormData({ ...formData, textChange: "Update" });
-            })
-            .catch((err) => {
-              if (err.response.status === 401) {
-                signout();
-                history.push("/login");
-              }
-              // console.log(err.response);
-            });
-        });
-    });
+                {
+                  headers: {
+                    Authorization: token,
+                  },
+                }
+              )
+              .then((res) => {
+                toast.success(res.data.message);
+                setFormData({ ...formData, textChange: "Update" });
+              })
+              .catch((err) => {
+                if (err.response.status === 401) {
+                  signout(() => history.push("/login"));
+                }
+                // console.log(err.response);
+              });
+          });
+      })
+      .catch((err) => console.log(err));
   };
 
   return (

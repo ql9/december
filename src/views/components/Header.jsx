@@ -24,8 +24,7 @@ const Header = ({ history, flag }) => {
       })
       .catch((err) => {
         if (err.response.status === 401) {
-          signout();
-          history.push("/login");
+          signout(() => history.push("/login"));
         }
       });
   };
@@ -78,8 +77,7 @@ const Header = ({ history, flag }) => {
       <button
         style={{ flex: 0.5, marginRight: 16 }}
         onClick={() => {
-          signout();
-          history.push("/login");
+          signout(() => history.push("/login"));
         }}
       >
         <i class="fas fa-sign-out-alt fa-2x"></i>

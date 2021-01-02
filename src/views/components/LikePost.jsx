@@ -28,7 +28,7 @@ const Like = ({ postId, history }) => {
       })
       .catch((err) => {
         if (err.response.status === 401) {
-          signout();
+          signout(() => history.push("/login"));
         }
         console.log(err.response);
       });
@@ -54,8 +54,7 @@ const Like = ({ postId, history }) => {
       })
       .catch((err) => {
         if (err.response.status === 401) {
-          signout();
-          history.push("/login");
+          signout(() => history.push("/login"));
         }
         console.log(err.response);
       });
@@ -81,8 +80,7 @@ const Like = ({ postId, history }) => {
       })
       .catch((err) => {
         if (err.response.status === 401) {
-          signout();
-          history.push("/login");
+          signout(() => history.push("/login"));
         }
         console.log(err.response);
       });

@@ -21,7 +21,7 @@ function Home({ history }) {
       })
       .catch((err) => {
         if (err.response.status === 401) {
-          signout();
+          signout(() => history.push("/login"));
         }
         // console.log(err.response);
       });

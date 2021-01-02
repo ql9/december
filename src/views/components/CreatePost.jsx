@@ -61,46 +61,53 @@ const CreatePost = ({ getPosts, history }) => {
       })
       .catch((err) => {
         if (err.response.status === 401) {
-          signout();
-          history.push("/login");
+          signout(() => history.push("/login"));
         }
       });
   };
 
-  const handleSubmit = () => {
-    storage.ref(`/images/${image.name}`).put(image);
-    storage
-      .ref("images")
-      .child(image.name)
-      .getDownloadURL()
-      .then((url) => {
-        const token = getCookie("token");
-        axios
-          .post(
-            `${process.env.REACT_APP_API_URL}/post`,
-            {
-              image: url,
-              content: content,
-              userId: `${isAuth()._id}`,
-            },
-            {
-              headers: {
-                Authorization: token,
-              },
-            }
-          )
-          .then((res) => {
-            getPosts();
-            toast.success(res.data.message);
-          })
-          .catch((err) => {
-            if (err.response.status === 401) {
-              signout();
-              history.push("/login");
-            }
-            console.log(err.response);
+  const handleSubmit = async () => {
+    await storage
+      .ref(`/images/${image.name}`)
+      .put(image)
+      .then(async () => {
+        storage
+          .ref("images")
+          .child(image.name)
+          .getDownloadURL()
+          .then((url) => {
+            const token = getCookie("token");
+            axios
+              .post(
+                `${process.env.REACT_APP_API_URL}/post`,
+                {
+                  image: url,
+                  content: content,
+                  userId: `${isAuth()._id}`,
+                },
+                {
+                  headers: {
+                    Authorization: token,
+                  },
+                }
+              )
+              .then((res) => {
+                getPosts();
+                toast.success(res.data.message);
+                setContent("");
+                setImage(null);
+                setImagePreview(null);
+                setOpen(false);
+              })
+              .catch((err) => {
+                if (err.response.status === 401) {
+                  signout(() => history.push("/login"));
+                }
+                console.log(err.response);
+              });
           });
-      });
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -150,10 +157,6 @@ const CreatePost = ({ getPosts, history }) => {
           onConfirm={() => {
             if (content && imagePreview) {
               handleSubmit();
-              setContent("");
-              setImage(null);
-              setImagePreview(null);
-              setOpen(false);
             }
           }}
           onOpen={() => setOpen(true)}
@@ -188,8 +191,8 @@ const CreatePost = ({ getPosts, history }) => {
                 style={{
                   height: "auto",
                   width: "auto",
-                  // maxWidth: 600,
-                  // maxHeight: 600,
+                  maxWidth: 600,
+                  maxHeight: 600,
                 }}
               />
             </div>
