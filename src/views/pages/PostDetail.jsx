@@ -25,7 +25,6 @@ const PostDetail = ({ history }) => {
   const [content, setContent] = useState(location.state.content);
   const [comment, setComment] = useState("");
   const [listComment, setListComment] = useState([]);
-  const [loadComment, setLoadComment] = useState(false);
 
   const postComment = (content) => {
     const token = getCookie("token");
@@ -45,7 +44,7 @@ const PostDetail = ({ history }) => {
       )
       .then((res) => {
         setComment("");
-        setLoadComment(!loadComment);
+        getCommentsByPostId();
         // console.log(res.data.message);
       })
       .catch((err) => {
@@ -104,7 +103,7 @@ const PostDetail = ({ history }) => {
                       confirmButton="Yes"
                       onConfirm={() => {
                         deleteComment(key);
-                        setLoadComment(!loadComment);
+                        getCommentsByPostId();
                       }}
                       header="Do you want delete this comment?"
                       trigger={
@@ -137,7 +136,7 @@ const PostDetail = ({ history }) => {
         },
       })
       .then(() => {
-        setLoadComment(!loadComment);
+        getCommentsByPostId();
       })
       .catch((err) => {
         if (err.response.status === 401) {
@@ -151,7 +150,7 @@ const PostDetail = ({ history }) => {
   useEffect(() => {
     getCommentsByPostId();
     // eslint-disable-next-line
-  }, [loadComment]);
+  }, []);
 
   return (
     <div>
